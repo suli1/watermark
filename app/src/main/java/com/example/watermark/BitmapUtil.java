@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.net.Uri;
 
+import android.util.Log;
 import java.io.Closeable;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,6 +36,13 @@ public final class BitmapUtil {
      * Used to know the max texture size allowed to be rendered
      */
     private static int mMaxTextureSize;
+
+    static Bitmap rotate(Bitmap bitmap, int degrees) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(degrees);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix,
+            true);
+    }
 
     /**
      * Crop image bitmap from given bitmap using the given points in the original bitmap and the given
@@ -224,7 +232,7 @@ public final class BitmapUtil {
         return ret;
     }
 
-    public static Bitmap addWatermarkToBitmap(Bitmap src, String text, float ratio, String location, int offset) {
+    public static Bitmap addWatermarkToBitmap(Bitmap src, String text, float ratio, String location, int offset, int textSize, int textColor) {
         int width = src.getWidth();
         int height = src.getHeight();
 
@@ -233,21 +241,19 @@ public final class BitmapUtil {
         canvas.drawBitmap(src, 0, 0, null);
 
         Paint paint = new Paint();
-        paint.setTextSize(16);
-        paint.setColor(0xFFFF0000);
+        paint.setTextSize(textSize);
+        paint.setColor(textColor);
 
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
-
 
         float scale = (width * ratio) / bounds.width();
         Matrix matrix = new Matrix();
         matrix.postScale(scale, scale);
 
-
         switch (location) {
             case "topLeft":
-                canvas.drawText(text, offset, offset, paint);
+                canvas.drawText(text, offset, offset + bounds.height(), paint);
                 break;
             case "topRight":
                 canvas.drawText(text, width - bounds.width() - offset, offset, paint);
@@ -256,7 +262,7 @@ public final class BitmapUtil {
                 canvas.drawText(text, offset, height - bounds.height() - offset, paint);
                 break;
             case "bottomRight":
-                canvas.drawText(text, width - bounds.width() - offset, height - bounds.height() - offset, paint);
+                canvas.drawText(text, width - bounds.width() - offset, height - offset, paint);
                 break;
         }
 
