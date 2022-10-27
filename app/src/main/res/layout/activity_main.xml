@@ -17,19 +17,31 @@
         android:id="@+id/bntPickImages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:layout_marginRight="16dp"
         android:text="Pick Images"
         />
 
+    <Button
+        android:id="@+id/bntPickDir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Pick Dir"
+        />
+
     <View
-        android:layout_width="32dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_weight="1"
         />
 
     <Button
         android:id="@+id/btnAddWatermark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add watermark"
+        android:textAllCaps="false"
+        android:text="Add"
         />
 
   </LinearLayout>
