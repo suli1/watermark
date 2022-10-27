@@ -141,23 +141,20 @@ public class MainActivity extends AppCompatActivity {
       }
 
       final int index = i;
-      Uri output =
-          Uri.fromFile(new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getPath(),
-              "watermark_" + index + ".jpg"));
-      Log.d(TAG, "output watermark file:" + output);
+
       new BitmapImageWatermarkTask(
           this,
           src.original,
           0,
           "bottomRight",
-          output,
+          index,
           response -> {
-            if (response.success) {
-              src.watermarked = output;
+            if (response.output != null) {
+              src.watermarked = response.output;
               adapter.notifyItemChanged(index);
               Log.i(TAG, "Add watermark to (" + src.watermarked + ")");
             } else {
-              Log.e(TAG, "Add watermark to (" + src.original + ") failed!");
+              Log.e(TAG, "Add watermark to (" + src.original + ") failed!" + response.error);
             }
           }
       ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
